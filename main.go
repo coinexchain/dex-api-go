@@ -18,23 +18,7 @@ func main() {
 	from := bear.GetAddress("lhr")
 	fmt.Println(from)
 	fmt.Println("coinex10hmcj9sp6gef5244wxkwt9jgweuwpp9fjcmwng")
-	transport := trans.New("127.0.0.1:1317", "/", []string{"http"})
-	cli := dex.Default
-	cli.SetTransport(transport)
 
-	getAccountParam := auth.GetAccountParams{
-		Address:    from,
-		Context:    nil,
-		HTTPClient: nil,
-	}
-	getAccountParam.SetTimeout(time.Second)
-	ok, _, err := cli.Auth.GetAccount(&getAccountParam)
-	if err != nil {
-		return
-	}
-	seq := ok.Payload.Result.Sequence
-	accountNum := ok.Payload.Result.AccountNumber
-	fmt.Printf("seq:%s, accNum:%s\n", *seq, *accountNum)
 
 	amount := "100000000"
 	demom := "cet"
