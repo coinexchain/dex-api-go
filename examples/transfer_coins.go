@@ -12,13 +12,13 @@ func main() {
 
 	//init keybase
 	bear.BearInit("tmp")
-	from := bear.GetAddress("lhr")
+	from := bear.GetAddress("key_name")
 
 	//init api context
 	ctx := context.DefaultApiContext()
 	ctx.SetChainID("coinexdex-test1")
 	ctx.SetFromAddress(from)
-	ctx.SetName("lhr")
+	ctx.SetName("key_name")
 	ctx.SetPassword("12345678")
 
 	//prepare params
