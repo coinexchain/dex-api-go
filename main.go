@@ -2,85 +2,53 @@ package main
 
 import (
 	"fmt"
-	dex "github.com/coinexchain/dex-api-go/client"
-	"github.com/coinexchain/dex-api-go/client/auth"
 	"github.com/coinexchain/dex-api-go/client/bank"
-	"github.com/coinexchain/dex-api-go/client/transactions"
+	"github.com/coinexchain/dex-api-go/context"
 	"github.com/coinexchain/dex-api-go/models"
 	bear "github.com/coinexchain/polarbear"
-	trans "github.com/go-openapi/runtime/client"
-	"strconv"
-	"time"
 )
 
 func main() {
+
+	//init keybase
 	bear.BearInit("tmp")
 	from := bear.GetAddress("lhr")
-	fmt.Println(from)
-	fmt.Println("coinex10hmcj9sp6gef5244wxkwt9jgweuwpp9fjcmwng")
 
+	//init api context
+	ctx := context.DefaultApiContext()
+	ctx.SetChainID("coinexdex-test1")
+	ctx.SetFromAddress(from)
+	ctx.SetName("lhr")
+	ctx.SetPassword("12345678")
 
-	amount := "100000000"
-	demom := "cet"
+	//prepare params
 	unlockTime := "0"
-
-	baseReq := models.BaseReq{
-		AccountNumber:  *accountNum,
-		ChainID:       "coinexdex-test1",
-		Fees: []*models.Coin{
-			{
-				Amount: &amount,
-				Denom:  &demom,
-			},
-		},
-		From:          "coinex10hmcj9sp6gef5244wxkwt9jgweuwpp9fjcmwng",
-		Gas:           "2000000",
-		GasAdjustment: "1.1",
-		Memo:          "",
-		Sequence:      *seq,
-		Simulate:      false,
+	to := "coinex1h6favnlytw3lgpy8cm6lcv530z0ctj6rplwt06"
+	transferredAmount := "400000000"
+	err := ctx.RefreshAccNumAndSeq()
+	if err != nil {
+		panic(err)
 	}
-
 	param := &bank.SendCoinsParams{
 		Account: bank.SendCoinsBody{
 			Amount: []*models.Coin{
-				&models.Coin{
-					Amount: &amount,
-					Denom:  &demom,
+				{
+					Amount: &transferredAmount,
+					Denom:  &context.DefaultDenom,
 				},
 			},
-			BaseReq:    &baseReq,
+			BaseReq:    &ctx.BaseReq,
 			UnlockTime: &unlockTime,
 		},
-		Address:    "coinex1h6favnlytw3lgpy8cm6lcv530z0ctj6rplwt06",
-		Context:    nil,
-		HTTPClient: nil,
+		Address: to,
 	}
+	param.SetTimeout(context.DefaultTimeOut)
 
-	param.SetTimeout(time.Second)
-	resp, err := cli.Bank.SendCoins(param)
+	//transfer coins
+	resp, err := ctx.Client.Bank.SendCoins(param)
 	if err == nil {
 		bz, _ := resp.GetPayload().MarshalBinary()
-		an , _ := strconv.ParseUint(*accountNum,10,64)
-		sq , _ := strconv.ParseUint(*seq,10,64)
-		ret := bear.SignAndBuildBroadcast("lhr", "12345678", string(bz), "coinexdex-test1", "block", an, sq)
-		fmt.Printf("%s\n", bz)
-		fmt.Printf("%s\n", ret)
-		var stdTx transactions.BroadcastTxBody
-		_ = stdTx.UnmarshalBinary([]byte(ret))
-		fmt.Println("hehe")
-		fmt.Println(stdTx)
-		param := transactions.BroadcastTxParams{
-			TxBroadcast: stdTx,
-			Context:     nil,
-			HTTPClient:  nil,
-		}
-		param.SetTimeout(2*time.Second)
-		ok, err := cli.Transactions.BroadcastTx(&param)
-		fmt.Println(err)
-		bz, err = ok.GetPayload().MarshalBinary()
-		fmt.Printf("%s\n", bz)
+		resp, err := ctx.SignAndBroadcast(bz)
+		fmt.Printf("response:%s error:%v\n", resp, err)
 	}
-
-	fmt.Println(err)
 }
