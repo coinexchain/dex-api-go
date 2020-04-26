@@ -69,6 +69,10 @@ func (a *ApiContext) SetFees(amount string) {
 	a.BaseReq.Fees[0].Amount = &amount
 }
 
+func (a *ApiContext) SetGas(gas string) {
+	a.BaseReq.Gas = gas
+}
+
 func (a *ApiContext) SetFromAddress(from string) {
 	a.BaseReq.From = from
 }
