@@ -49,6 +49,16 @@ type ClientService interface {
 
 	ModifyPricePrecision(params *ModifyPricePrecisionParams) (*ModifyPricePrecisionOK, error)
 
+	QueryCandleStick(params *QueryCandleStickParams) (*QueryCandleStickOK, error)
+
+	QueryDeal(params *QueryDealParams) (*QueryDealOK, error)
+
+	QueryDepth(params *QueryDepthParams) (*QueryDepthOK, error)
+
+	QueryOrder(params *QueryOrderParams) (*QueryOrderOK, error)
+
+	QueryTickers(params *QueryTickersParams) (*QueryTickersOK, error)
+
 	QueryTradingPairs(params *QueryTradingPairsParams) (*QueryTradingPairsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
@@ -425,6 +435,186 @@ func (a *Client) ModifyPricePrecision(params *ModifyPricePrecisionParams) (*Modi
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for modifyPricePrecision: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  QueryCandleStick queries market candle stick
+
+  Query candleStick until to given time
+*/
+func (a *Client) QueryCandleStick(params *QueryCandleStickParams) (*QueryCandleStickOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryCandleStickParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "queryCandleStick",
+		Method:             "GET",
+		PathPattern:        "/market/candle-sticks",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &QueryCandleStickReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryCandleStickOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for queryCandleStick: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  QueryDeal queries market deal
+
+  Query market deal until to given time
+*/
+func (a *Client) QueryDeal(params *QueryDealParams) (*QueryDealOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryDealParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "queryDeal",
+		Method:             "GET",
+		PathPattern:        "/market/deals",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &QueryDealReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryDealOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for queryDeal: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  QueryDepth queries market depth
+
+  Query purchases and sales of a market at all price levels
+*/
+func (a *Client) QueryDepth(params *QueryDepthParams) (*QueryDepthOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryDepthParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "queryDepth",
+		Method:             "GET",
+		PathPattern:        "/market/depths",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &QueryDepthReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryDepthOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for queryDepth: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  QueryOrder queries account s order
+
+  Query account's order activities in all markets until to given time
+*/
+func (a *Client) QueryOrder(params *QueryOrderParams) (*QueryOrderOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryOrderParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "queryOrder",
+		Method:             "GET",
+		PathPattern:        "/market/user-orders",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &QueryOrderReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryOrderOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for queryOrder: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  QueryTickers queries market tickers
+
+  Query tickers info
+*/
+func (a *Client) QueryTickers(params *QueryTickersParams) (*QueryTickersOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewQueryTickersParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "queryTickers",
+		Method:             "GET",
+		PathPattern:        "/market/tickers",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &QueryTickersReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*QueryTickersOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for queryTickers: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

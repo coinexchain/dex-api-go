@@ -14,9 +14,9 @@ import (
 
 var DefaultContext ApiContext = DefaultApiContext()
 var DefaultTimeOut = 10 * time.Second
-var DefaultFeesAmount string = "50000000"
+var DefaultFeesAmount string = "600000"
 var DefaultDenom string = "cet"
-var DefaultGas string = "2000000"
+var DefaultGas string = "30000"
 
 type ApiContext struct {
 	Name     string
